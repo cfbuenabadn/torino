@@ -1,0 +1,49 @@
+Encoding: UTF-8
+Type: Package
+Package: torino
+Title: Reference-free Isoform Analysis via Empirical Bayes Poisson Matrix Factorization
+Version: 0.1.0
+Date: 2026-03-30
+Authors@R: c(
+    person("Cristian", "Buenabaden", role = c("aut", "cre")),
+    person("Dongyue", "Xie", role = "aut", email = "dyxie@uchicago.edu",
+           comment = "Author of bundled ebpmf.alpha code (https://github.com/DongyueXie/ebpmf.alpha)"))
+Description: End-to-end pipeline for reference-free analysis of mRNA isoform
+    variation in large-scale RNA-seq datasets. Includes functions for data
+    preprocessing (column merging to reduce RAM usage, sample filtering) and
+    Empirical Bayes Poisson Matrix Factorization. The EBPMF algorithm from the
+    ebpmf.alpha package (Dongyue Xie) is bundled directly to simplify installation.
+License: MIT + file LICENSE
+Imports:
+    Matrix,
+    magrittr,
+    parallel,
+    wavethresh,
+    matrixStats,
+    Rfast,
+    mixsqp,
+    ebnm,
+    fastTopics,
+    flashier,
+    smashr,
+    smashrgen,
+    ebpm,
+    vebpm,
+    ashr
+Remotes:
+    stephenslab/mixsqp,
+    stephenslab/smashr,
+    stephenslab/ebnm,
+    stephenslab/fastTopics,
+    willwerscheid/flashier,
+    DongyueXie/smashrgen,
+    DongyueXie/ebpm,
+    DongyueXie/vebpm
+Suggests:
+    tidyverse,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+NeedsCompilation: no
+VignetteBuilder: knitr
+RoxygenNote: 7.3.1

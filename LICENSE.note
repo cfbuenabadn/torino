@@ -1,0 +1,12 @@
+This package bundles source code from ebpmf.alpha
+(https://github.com/DongyueXie/ebpmf.alpha), which is also licensed under MIT:
+
+  YEAR: 2022-2024
+  COPYRIGHT HOLDER: Dongyue Xie
+
+The bundled files are located in R/ and include:
+  BMSM.R, NMF_HALS.R, cluster_mix.R, ebbp_beta_mixture.R, ebnm_smooth.R,
+  ebpmf_identity.R, ebpmf_identity_init.R, ebpmf_log.R, ebpmf_log_controls.R,
+  ebpmf_log_flash_init.R, ebpmf_log_flash_update.R, ebpmf_log_init.R,
+  init_flashier.R, simulate_poisson_matrix.R, spmf.R, summary_stm.R,
+  utils.R, vga_solver_mat.R
