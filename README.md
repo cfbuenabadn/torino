@@ -19,7 +19,7 @@ remotes::install_github("DongyueXie/ebpm")
 remotes::install_github("DongyueXie/vebpm")
 
 # Install torino
-remotes::install_github("yangili1/cfbuenabadn/torino")
+remotes::install_github("git@github.com:cfbuenabadn/torino.git")
 ```
 
 CRAN dependencies (`Matrix`, `magrittr`, `wavethresh`, `matrixStats`, `Rfast`, `ashr`) are installed automatically.
