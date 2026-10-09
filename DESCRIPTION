@@ -5,7 +5,7 @@ Title: Reference-free Isoform Analysis via Empirical Bayes Poisson Matrix Factor
 Version: 0.1.0
 Date: 2026-03-30
 Authors@R: c(
-    person("Cristian", "Buenabaden", role = c("aut", "cre")),
+    person("Carlos", "Buen Abad Najar", role = c("aut", "cre"), email = 'cfbuenabadnajar@gmail.com'),
     person("Dongyue", "Xie", role = "aut", email = "dyxie@uchicago.edu",
            comment = "Author of bundled ebpmf.alpha code (https://github.com/DongyueXie/ebpmf.alpha)"))
 Description: End-to-end pipeline for reference-free analysis of mRNA isoform
