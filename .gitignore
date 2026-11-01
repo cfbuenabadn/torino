@@ -1,0 +1,22 @@
+# Python build residue
+__pycache__/
+*.py[cod]
+
+# Jupyter autosaves
+.ipynb_checkpoints/
+
+# R / RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# R build artifacts
+/torino.Rcheck/
+/*.tar.gz
+src/*.o
+src/*.so
+
+# OS
+.DS_Store
