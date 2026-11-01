@@ -5,23 +5,54 @@ library(gridExtra)
 library(grid)
 library(RColorBrewer)
 
+# Pull numeric positions out of 'chrom:position' labels, NA where there is none
+# (the padding rows, or rownames that are not coordinates at all). A dot is
+# accepted as the separator too, since as.data.frame() rewrites the colon via
+# make.names() whenever the padding rows leave the rownames non-unique.
+coord_positions <- function(labels) {
+  positions <- rep(NA_real_, length(labels))
+  has_coord <- grepl("^.+[:.][0-9]+$", labels)
+  positions[has_coord] <- suppressWarnings(as.numeric(sub("^.+[:.]", "", labels[has_coord])))
+  positions
+}
+
 # Main wrapper function for plotting factors
 plot_factors_wrapper <- function(EF, gene='NULL', strand = 'plus', 
                                 colores = NULL, figsize = NULL, lm = TRUE, 
                                 factor_list = NULL, ax = NULL, xlim = NULL, 
-                                plot_coords = FALSE, lwidth = 3, mute_y_axis = FALSE) {
+                                plot_coords = FALSE, lwidth = 3, mute_y_axis = FALSE,
+                                coords = NULL) {
   
-  # Extract EF data (excluding first and last rows)
-#   EF <- as.data.frame(rds[[ebpmf]][['EF_smooth']][2:(nrow(rds[[ebpmf]][['EF_smooth']])-1), ])
-#   rownames(EF) <- rds[[ebpmf]][['coords']][2:(length(rds[[ebpmf]][['coords']])-1)]
+  # Coordinates are read off the rownames of EF. Older factorization runs saved
+  # EF_smooth without them, so the fit's own coords vector can be passed instead;
+  # it is trimmed here if given untrimmed (i.e. still carrying the padding rows).
+  if (!is.null(coords)) {
+    if (length(coords) == nrow(EF) + 2) {
+      coords <- coords[2:(length(coords) - 1)]
+    }
+    if (length(coords) != nrow(EF)) {
+      stop("length(coords) must be nrow(EF), or nrow(EF) + 2 if untrimmed")
+    }
+    rownames(EF) <- coords
+  }
   coords <- rownames(EF)
+  positions <- coord_positions(coords)
+  
+  # Without any usable coordinate, plot against row index rather than hand
+  # ggplot an all-NA xlim (which fails with "'from' must be a finite number").
+  if (all(is.na(positions))) {
+    warning("EF has no 'chrom:position' rownames; plotting against row index. ",
+            "Pass coords = <fit>$coords to get genomic coordinates.")
+    coords <- as.character(seq_len(nrow(EF)))
+    rownames(EF) <- coords
+    positions <- seq_len(nrow(EF))
+  }
   
   # Set xlim if not provided
   if (is.null(xlim)) {
-    coord_parts1 <- strsplit(coords[1], ":")[[1]]
-    coord_parts2 <- strsplit(coords[length(coords)], ":")[[1]]
-    xlim1 <- as.numeric(coord_parts1[2]) - 1000
-    xlim2 <- as.numeric(coord_parts2[2]) + 1000
+    usable <- which(!is.na(positions))
+    xlim1 <- positions[usable[1]] - 1000
+    xlim2 <- positions[usable[length(usable)]] + 1000
     xlim <- c(xlim1, xlim2)
   }
   
@@ -143,11 +174,14 @@ plot_factor_tracks <- function(EF, gene, K, title = NULL, fill = TRUE, smooth = 
     figsize <- c(15, S)
   }
   
-  # Extract coordinates
-  coord_parts_start <- strsplit(rownames(EF)[1], ":")[[1]]
-  coord_parts_end <- strsplit(rownames(EF)[nrow(EF)], ":")[[1]]
-  start <- as.numeric(coord_parts_start[2])
-  end <- as.numeric(coord_parts_end[2])
+  # Extract coordinates, falling back to row index if the rownames hold none
+  positions <- coord_positions(rownames(EF))
+  if (all(is.na(positions))) {
+    positions <- seq_len(nrow(EF))
+  }
+  usable <- which(!is.na(positions))
+  start <- positions[usable[1]]
+  end <- positions[usable[length(usable)]]
   length_coords <- nrow(EF)
   
   coords <- seq(start, end, length.out = length_coords)

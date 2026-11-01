@@ -2,7 +2,7 @@
             '/software/R-4.1.0-el8-x86_64/lib64/R/library')) 
 
 library(tidyverse)
-library(ebpmf.alpha)
+library(torino)
 
 torino_factorization <- function(counts, K, seed=0) {
 
@@ -10,7 +10,7 @@ torino_factorization <- function(counts, K, seed=0) {
         {
         lib_size <- rowSums(counts) %>% as.integer()
         set.seed(seed)
-        fit = ebpmf.alpha::ebpmf_identity(as.matrix(counts),K, lib_size=lib_size)
+        fit = torino::ebpmf_identity(as.matrix(counts),K, lib_size=lib_size)
 
         factors <- paste0('factor_', 1:K)
         
@@ -81,8 +81,3 @@ prepare_counts <- function(counts, min_counts, n=1){
     
 }
 
-run_torino <- function(counts, K = 10, min_counts = 100){
-    counts <- prepare_counts(counts, min_counts)
-    torino_factorization <- run_torino(counts, K=K)
-    return(torino_fit)
-}
