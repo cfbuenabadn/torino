@@ -52,6 +52,31 @@ prepped <- prepare_counts(counts, min_counts = 100, n = 3)
 fit <- torino_factorization(prepped, K = 10, seed = 1)
 ```
 
+### One gene, CSV in and RDS out
+
+`run_torino_gene()` wraps the whole per-gene run: it reads a count CSV, calls
+`prepare_counts()` and `torino_factorization()`, and writes the RDS layout the
+downstream Torino tooling reads.
+
+```r
+run_torino_gene(
+    gene_name   = "SRSF3",
+    K           = 10,
+    counts_path = "example_data/Human_SRSF3.csv.gz",
+    out_path    = "results/rds/Human_SRSF3.rds"
+)
+```
+
+The CSV needs a `Sample_ID` column; the remaining columns are genomic
+positions. Defaults are `min_counts = 30`, `n = 1`, `seed = 1`. Pass
+`n = "auto"` to bin columns by matrix width (the `choose_merge_n()` rule:
+3 for >15k bases, 9 for >60k, 30 for >1M), and
+`strip_sample_suffix = TRUE` to drop a trailing `.<suffix>` from sample IDs.
+
+The saved list has `$gene`, `$torino_K<K>` (named for the `K` you asked for, so
+`$torino_K10` at `K = 10`) and `$coords_all` — the position names from before
+any filtering, merging or padding.
+
 ### Command-line runner
 
 `inst/scripts/run_torino_factorization.R` provides a command-line interface for cluster use:
